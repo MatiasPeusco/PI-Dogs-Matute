@@ -9,15 +9,18 @@ const Paginado = ({
   currentPage,
   setCurrentPage,
 }) => {
+  // Estado para controlar el límite de número de página, el número máximo de página y el número mínimo de página
   const [pageNumberLimit, setPageNumberLimit] = useState(5);
   const [maxPageNumberLimit, setMaxPageNumberLimit] = useState(5);
   const [minPageNumberLimit, setMinPageNumberLimit] = useState(0);
 
+  // Cálculo de los números de página
   const pageNumbers = [];
   for (let i = 0; i <= Math.ceil(allDogs / dogsPerPage); i++) {
     pageNumbers.push(i + 1);
   }
 
+  // Renderizado de los números de página
   const renderPageNumber = pageNumbers.map((number) => {
     if (number < maxPageNumberLimit + 1 && number > minPageNumberLimit) {
       return (
@@ -30,6 +33,7 @@ const Paginado = ({
     }
   });
 
+  // Manejo de la página siguiente
   const handleNext = () => {
     setCurrentPage(currentPage + 1);
 
@@ -39,6 +43,7 @@ const Paginado = ({
     }
   };
 
+  // Manejo de la página anterior
   const handlePrev = () => {
     setCurrentPage(currentPage - 1);
 
@@ -51,14 +56,7 @@ const Paginado = ({
   return (
     <div>
       <PaginadoContainer>
-        {/* {pageNumbers?.map((number) => {
-          return (
-            <li key={number}>
-              <Button onClick={() => paginado(number)}>{number}</Button>
-            </li>
-          );
-        })} */}
-
+        {/* Botón de página anterior */}
         <li>
           <Button
             onClick={(e) => handlePrev(e)}
@@ -67,7 +65,9 @@ const Paginado = ({
             <FaArrowLeft />
           </Button>
         </li>
+        {/* Números de página */}
         {renderPageNumber}
+        {/* Botón de página siguiente */}
         <Button
           onClick={(e) => handleNext(e)}
           disabled={

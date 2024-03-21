@@ -1,8 +1,10 @@
 import React from "react";
 
-const FilterOrder = ({handleOrderByName}) => {
+// Definición del componente funcional FilterOrder
+const FilterOrder = ({ handleOrderByName }) => {
   return (
     <div>
+      {/* Selector para ordenar por nombre */}
       <span>Order</span>
       <select onChange={(e) => handleOrderByName(e)}>
         <option value="asc" name="asc">
@@ -16,4 +18,5 @@ const FilterOrder = ({handleOrderByName}) => {
   );
 };
 
-export default FilterOrder;
+export default FilterOrder; // Exportar el componente FilterOrder
+

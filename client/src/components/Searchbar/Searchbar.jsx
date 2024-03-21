@@ -1,38 +1,45 @@
 import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { getSearchByName } from "../../actions";
 import { Container, SearchBarContainer } from "./StyledSearchbar";
-
 
 const Searchbar = () => {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
 
+  // Función para manejar el cambio en el campo de búsqueda
   const handleChange = (e) => {
     setName(e.target.value);
   };
 
+  // Función para manejar el envío del formulario de búsqueda
   const handleSubmit = (e) => {
-    e.preventDefault(e);
+    e.preventDefault();
     dispatch(getSearchByName(name));
   };
 
+  // Función para manejar la tecla Enter en el campo de búsqueda
   const handleKeyPress = (e) => {
-    var code = e.charCode || e.keyCode;
-    if(code === 13){
-      dispatch(getSearchByName(name))
+    if (e.key === "Enter") {
+      dispatch(getSearchByName(name));
     }
-  }
+  };
 
   return (
     <Container>
       <SearchBarContainer>
-        <FaSearch className="searchIcon" onClick={(e) => handleSubmit(e)}/>
-        <input placeholder="Search Dog" onChange={(e) => handleChange(e)} onKeyPress={(e) => handleKeyPress(e)}/>
-    </SearchBarContainer>
+        {/* Icono de búsqueda */}
+        <FaSearch className="searchIcon" onClick={handleSubmit} />
+        {/* Campo de entrada para la búsqueda */}
+        <input
+          placeholder="Search Dog"
+          value={name}
+          onChange={handleChange}
+          onKeyPress={handleKeyPress}
+        />
+      </SearchBarContainer>
     </Container>
-    
   );
 };
 

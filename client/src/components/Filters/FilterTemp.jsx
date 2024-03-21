@@ -1,11 +1,14 @@
-import React from 'react'
+import React from 'react';
 
-const FilterTemp = ({handleFilterTemperament, allTemperaments}) => {
+// Definición del componente funcional FilterTemp
+const FilterTemp = ({ handleFilterTemperament, allTemperaments }) => {
   return (
     <div>
-        <span>Temperament</span>
-        <select onChange={handleFilterTemperament}>
+      {/* Selector para filtrar por temperamento */}
+      <span>Temperament</span>
+      <select onChange={handleFilterTemperament}>
         <option value="all">All</option>
+        {/* Mapeo de todos los temperamentos disponibles */}
         {allTemperaments?.map((t, index) => {
           return (
             <option value={t.name} key={index}>
@@ -15,7 +18,7 @@ const FilterTemp = ({handleFilterTemperament, allTemperaments}) => {
         })}
       </select>
     </div>
-  )
+  );
 }
 
-export default FilterTemp
+export default FilterTemp; // Exportar el componente FilterTemp

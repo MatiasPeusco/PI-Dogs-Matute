@@ -1,12 +1,17 @@
-import React from 'react'
-import { LoaderContainer } from './StyledLoader'
+import React from 'react';
+import { LoaderContainer } from './StyledLoader'; // Importar el contenedor de estilo para el loader
 
+// Componente funcional Loader que muestra un indicador de carga mientras se espera la respuesta de la API
 const Loader = () => {
   return (
     <LoaderContainer>
-        <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+      {/* Indicador de carga animado */}
+      <div className="lds-roller">
+        <div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div>
+      </div>
     </LoaderContainer>
-  )
+  );
 }
 
-export default Loader
+export default Loader; // Exportar el componente Loader

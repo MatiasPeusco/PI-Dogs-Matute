@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getDogsTemperament, postDog } from "../../actions";
-import { FormContainer } from "./StyledCreate";
+import React, { useState, useEffect } from "react"; // Importar React y los hooks useState y useEffect
+import { useDispatch, useSelector } from "react-redux"; // Importar useDispatch y useSelector de react-redux
+import { getDogsTemperament, postDog } from "../../actions"; // Importar acciones de Redux
+import { FormContainer } from "./StyledCreate"; // Importar estilos personalizados
 
+// Función para validar el formulario
 const validate = (input) => {
   let error = {};
   let regexUrl =
@@ -42,10 +43,12 @@ const validate = (input) => {
   return error;
 };
 
+// Definición del componente funcional Create
 const Create = () => {
-  const dispatch = useDispatch();
-  const temperaments = useSelector((state) => state.temperaments);
+  const dispatch = useDispatch(); // Obtener la función dispatch
+  const temperaments = useSelector((state) => state.temperaments); // Obtener el estado de los temperamentos desde Redux
 
+  // Estado local para manejar el formulario
   const [input, setInput] = useState({
     name: "",
     height: "",
@@ -55,13 +58,15 @@ const Create = () => {
     temperament: [],
   });
 
-  const [errors, setErrors] = useState({});
-  const [isSubmit, setIsSubmit] = useState(false);
+  const [errors, setErrors] = useState({}); // Estado local para almacenar errores de validación
+  const [isSubmit, setIsSubmit] = useState(false); // Estado local para indicar si se ha enviado el formulario
 
+  // Efecto para obtener los temperamentos al montar el componente
   useEffect(() => {
     dispatch(getDogsTemperament());
   }, [dispatch]);
 
+  // Manejador de cambio de input del formulario
   const handleOnChange = (e) => {
     setInput({
       ...input,
@@ -75,9 +80,8 @@ const Create = () => {
       })
     );
   };
-  console.log(input);
-  console.log("errores: ", errors);
 
+  // Manejador de selección de temperamento
   const handleSelectTemperament = (e) => {
     setInput({
       ...input,
@@ -85,9 +89,10 @@ const Create = () => {
     });
   };
 
-  console.log(errors);
+  // Manejador de envío del formulario
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Evitar el comportamiento por defecto del formulario
+
     setErrors(
       validate({
         ...input,
@@ -95,7 +100,9 @@ const Create = () => {
       })
     );
 
+    // Validar si hay errores en el formulario
     if (Object.keys(errors).length === 0) {
+      // Enviar la solicitud de creación del perro al servidor
       dispatch(postDog(input));
       alert("Dog created succesfully");
       setInput({
@@ -113,11 +120,11 @@ const Create = () => {
     }
   };
 
-  console.log("input: ", input);
-
+  // Renderizado del componente
   return (
     <div>
       <FormContainer>
+        {/* Formulario para crear un nuevo perro */}
         <form action="" onSubmit={(e) => handleSubmit(e)}>
           <div>
             <input
@@ -171,6 +178,7 @@ const Create = () => {
           </div>
           <div>
             <label htmlFor="temperament">Select Temperament:</label>
+            {/* Selector de temperamento */}
             <select onChange={(e) => handleSelectTemperament(e)}>
               {temperaments?.map((t) => {
                 return (
@@ -193,4 +201,5 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default Create; // Exportar el componente Create
+

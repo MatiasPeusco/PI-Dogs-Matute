@@ -5,6 +5,7 @@ import RightNav from "./RightNav";
 const Burguer = () => {
   const [open, setOpen] = useState(false);
 
+  // Componente que muestra el ícono del menú  y controla su estado
   return (
     <>
       <StyledBurguer open={open} onClick={() => setOpen(!open)}>
@@ -12,9 +13,12 @@ const Burguer = () => {
         <div />
         <div />
       </StyledBurguer>
-      <RightNav open={open} setOpen={setOpen}/>
+      {/* Componente RightNav que muestra el menú lateral */}
+      <RightNav open={open} setOpen={setOpen} />
     </>
   );
 };
 
 export default Burguer;
+
+

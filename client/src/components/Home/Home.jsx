@@ -17,70 +17,82 @@ import Line from "../Line/Line";
 import ResetCreate from "../ResetCreate/ResetCreate";
 import Loader from "../Loader/Loader";
 
+// Componente funcional Home
 const Home = () => {
-  const dispatch = useDispatch();
-  const allDogs = useSelector((state) => state.dogs);
-  const allTemperaments = useSelector((state) => state.temperaments);
+  const dispatch = useDispatch(); // Hook de useDispatch para enviar acciones al store
+  const allDogs = useSelector((state) => state.dogs); // Selector para obtener el estado de los perros
+  const allTemperaments = useSelector((state) => state.temperaments); // Selector para obtener el estado de los temperamentos
 
-  const [order, setOrder] = useState("");
+  // Estado local para controlar la paginación
   const [currentPage, setCurrentPage] = useState(1);
-  const [dogsPerPage, setDogsPerPage] = useState(9);
-  // const [pageNumberLimit, setPageNumberLimit] = useState(5);
-  // const [maxPageNumberLimit, setMaxPageNumberLimit] = useState(5);
-  // const [minPageNumberLimit, setMinPageNumberLimit] = useState(0);
+  const [dogsPerPage] = useState(9);
 
+  // Obtener el índice del último perro de la página actual
   const indexOfLastDog = currentPage * dogsPerPage;
+  // Obtener el índice del primer perro de la página actual
   const indexOfFirstDog = indexOfLastDog - dogsPerPage;
+  // Obtener los perros de la página actual
   const currentDogs = allDogs.slice(indexOfFirstDog, indexOfLastDog);
 
+  // Función para cambiar de página
   const paginado = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
+  // Efecto para cargar los perros y los temperamentos al montar el componente
   useEffect(() => {
     dispatch(getDogs());
     dispatch(getDogsTemperament());
   }, [dispatch]);
 
+  // Función para manejar el ordenamiento por nombre de los perros
   const handleOrderByName = (e) => {
     e.preventDefault();
     dispatch(orderByName(e.target.value));
     setCurrentPage(1);
-    setOrder(e.target.value);
   };
 
+  // Función para manejar el filtrado por temperamento de los perros
   const handleFilterTemperament = (e) => {
     dispatch(filterTemperament(e.target.value));
     setCurrentPage(1);
   };
 
+  // Función para manejar el filtrado por origen de los perros
   const handleFilterCreated = (e) => {
     dispatch(filterCreated(e.target.value));
     setCurrentPage(1);
   };
 
+  // Función para reiniciar los filtros
   const handleReset = () => {
     dispatch(getDogs());
   };
 
-  if(!allDogs.length){
-    return(
-      <Loader />
-    )
+  // Renderizado condicional de un loader si no hay datos de perros
+  if (!allDogs.length) {
+    return <Loader />;
   }
 
+  // Renderizado del componente Home
   return (
     <div>
+      {/* Contenedor principal */}
       <Container>
+        {/* Barra de búsqueda */}
         <Searchbar />
+        {/* Componente Filters para filtrar los perros */}
         <Filters
           handleOrderByName={handleOrderByName}
           handleFilterTemperament={handleFilterTemperament}
           handleFilterCreated={handleFilterCreated}
           allTemperaments={allTemperaments}
         />
+        {/* Línea divisoria */}
         <Line />
+        {/* Botón para reiniciar los filtros */}
         <ResetCreate handleReset={handleReset} />
+        {/* Grid para mostrar las tarjetas de los perros */}
         <Grid>
           {currentDogs?.map((d) => {
             return (
@@ -96,6 +108,7 @@ const Home = () => {
           })}
         </Grid>
       </Container>
+      {/* Componente Paginado para la paginación */}
       <Paginado
         paginado={paginado}
         dogsPerPage={dogsPerPage}
@@ -103,9 +116,11 @@ const Home = () => {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
       />
+      {/* Componente Footer */}
       <Footer />
     </div>
   );
 };
 
-export default Home;
+export default Home; // Exportar el componente Home
+

@@ -2,41 +2,44 @@ require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
-const {
-  DB_USER, DB_PASSWORD, DB_HOST,
-} = process.env;
 
+// Extraer variables de entorno para la configuración de la base de datos
+const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
+
+// Crear una instancia de Sequelize para la conexión a la base de datos
 const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/dogs`, {
-  logging: false, // set to console.log to see the raw SQL queries
-  native: false, // lets Sequelize know we can use pg-native for ~30% more speed
+  logging: false, // Desactivar la visualización de las consultas SQL en la consola
+  native: false, // Desactivar el uso de pg-native para mayor velocidad
 });
+
+// Obtener el nombre del archivo actual
 const basename = path.basename(__filename);
 
+// Arreglo para almacenar los modelos definidos
 const modelDefiners = [];
 
-// Leemos todos los archivos de la carpeta Models, los requerimos y agregamos al arreglo modelDefiners
+// Leer todos los archivos de la carpeta Models y requerirlos
 fs.readdirSync(path.join(__dirname, '/models'))
   .filter((file) => (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js'))
   .forEach((file) => {
     modelDefiners.push(require(path.join(__dirname, '/models', file)));
   });
-// Injectamos la conexion (sequelize) a todos los modelos
+
+// Inyectar la conexión (sequelize) a todos los modelos
 modelDefiners.forEach(model => model(sequelize));
-// Capitalizamos los nombres de los modelos ie: product => Product
+
+// Capitalizar los nombres de los modelos
 let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-// En sequelize.models están todos los modelos importados como propiedades
-// Para relacionarlos hacemos un destructuring
+// Definir las relaciones entre los modelos
 const { Dog, Temperament } = sequelize.models;
+Dog.belongsToMany(Temperament, { through: "DogTemperament" });
+Temperament.belongsToMany(Dog, { through: "DogTemperament" });
 
-Dog.belongsToMany(Temperament, {through: "DogTemperament"});
-Temperament.belongsToMany(Dog, {through: "DogTemperament"});
-// Aca vendrian las relaciones
-// Product.hasMany(Reviews);
-
+// Exportar los modelos y la conexión
 module.exports = {
-  ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
-  conn: sequelize,     // para importart la conexión { conn } = require('./db.js');
+  ...sequelize.models, // Permite importar los modelos directamente
+  conn: sequelize,     // Permite importar la conexión a la base de datos
 };

@@ -9,16 +9,19 @@ import {
   FILTER_BREED_GROUP,
 } from "../actions";
 
-const inistialState = {
+// Definición del estado inicial del store
+const initialState = {
   dogs: [],
   allDogs: [],
   temperaments: [],
   details: [],
 };
 
-function rootReducer(state = inistialState, action) {
+// Reducer principal que maneja las acciones y actualiza el estado en consecuencia
+function rootReducer(state = initialState, action) {
   switch (action.type) {
     case GET_DOGS:
+      // Actualiza el estado con la lista completa de perros
       return {
         ...state,
         dogs: action.payload,
@@ -26,24 +29,28 @@ function rootReducer(state = inistialState, action) {
       };
 
     case GET_TEMPERAMENTS:
+      // Actualiza el estado con la lista de temperamentos
       return {
         ...state,
         temperaments: action.payload,
       };
 
     case GET_DETAIL:
+      // Actualiza el estado con los detalles de un perro específico
       return {
         ...state,
         details: action.payload,
       };
 
     case SEARCH_BY_NAME:
+      // Actualiza el estado con los perros filtrados por nombre de búsqueda
       return {
         ...state,
         dogs: action.payload,
       };
 
     case FILTER_TEMPERAMENT:
+      // Filtra los perros por temperamento y actualiza el estado
       const allDogs = state.allDogs;
       const filterTemperament = allDogs.filter(
         (f) =>
@@ -56,18 +63,20 @@ function rootReducer(state = inistialState, action) {
       };
 
     case FILTER_BREED_GROUP:
+      // Filtra los perros por grupo de raza y actualiza el estado
       const allBreeds = state.dogs;
       const filterBreeds = allBreeds.filter(
         (f) =>
-          f.breed_group.inclues(action.payload) ||
+          f.breed_group.includes(action.payload) ||
           f.breed_group.find((f) => f.breed_group === action.payload)
       );
-      return{
+      return {
         ...state,
-        dogs: action.payload === "all" ? allBreeds : filterBreeds
-      }
+        dogs: action.payload === "all" ? allBreeds : filterBreeds,
+      };
 
     case FILTER_CREATED:
+      // Filtra los perros creados o externos y actualiza el estado
       const filterCreated =
         action.payload === "created"
           ? state.allDogs.filter((f) => f.createdInDb)
@@ -78,12 +87,13 @@ function rootReducer(state = inistialState, action) {
       };
 
     case ORDER_BY_NAME:
+      // Ordena los perros por nombre ascendente o descendente y actualiza el estado
       let stateOrder = state.dogs;
       const sortDogs = stateOrder.sort((a, b) => {
         if (a.name > b.name) {
           return action.payload === "asc" ? 1 : -1;
         } else {
-          return (action.payload = "desc" ? -1 : 1);
+          return action.payload === "desc" ? -1 : 1;
         }
       });
       return {
